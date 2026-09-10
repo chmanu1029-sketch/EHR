@@ -1,0 +1,62 @@
+/* CareFlow EHR - Print Stylesheet */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  .disclaimer-banner,
+  .app-sidebar,
+  .app-header,
+  .btn,
+  .view-actions,
+  .tabs-header,
+  .btn-quick-action,
+  .modal-overlay,
+  .toast-container {
+    display: none !important;
+  }
+
+  .app-container {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .app-main,
+  .view-container {
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    margin-bottom: 20px !important;
+  }
+
+  .soap-grid {
+    display: block !important;
+  }
+
+  .soap-quadrant {
+    margin-bottom: 12px !important;
+    border: 1px solid #ddd !important;
+  }
+
+  .data-table th {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+  }
+
+  .print-header {
+    display: block !important;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+  }
+}

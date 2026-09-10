@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareFlow EHR - Electronic Health Record Prototype</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+
+  <!-- Top Medical Disclaimer Bar -->
+  <header class="disclaimer-banner" role="banner">
+    <div class="disclaimer-content">
+      <span class="disclaimer-badge">DEMO PROTOTYPE</span>
+      <span>⚠️ <strong>CareFlow EHR</strong> uses strictly fictional data for software demonstration. It does not provide medical diagnosis or treatment advice.</span>
+    </div>
+    <div class="disclaimer-actions">
+      <button id="btn-reset-demo" class="btn-ghost-sm" title="Restore sample fictional records">
+        🔄 Reset Demo Data
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <div class="app-container">
+
+    <!-- App Sidebar Navigation -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Sidebar Navigation">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">CareFlow EHR</div>
+          <div class="brand-subtitle">Clinical Health Network</div>
+        </div>
+      </div>
+
+      <!-- Quick Active Patient Context Indicator -->
+      <div class="sidebar-patient-context">
+        <div class="patient-context-label">
+          <span>Active Patient</span>
+          <a href="#profile" style="color: var(--primary-500); text-decoration: underline; font-size: 9.5px;">View Chart →</a>
+        </div>
+        <div class="patient-context-name" id="sidebar-context-name">Eleanor Vance</div>
+        <div class="patient-context-meta" id="sidebar-context-meta">MRN-94021 • 68y F</div>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Clinical Core</div>
+        
+        <a href="#dashboard" class="nav-link active" data-route="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#patients" class="nav-link" data-route="patients">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Patient Directory</span>
+        </a>
+
+        <a href="#profile" class="nav-link" data-route="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Patient Chart</span>
+        </a>
+
+        <a href="#appointments" class="nav-link" data-route="appointments">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Appointments</span>
+          <span class="nav-badge" id="badge-apt-count">0</span>
+        </a>
+
+        <div class="nav-section-label">Medical Documentation</div>
+
+        <a href="#notes" class="nav-link" data-route="notes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>SOAP Clinical Notes</span>
+        </a>
+
+        <a href="#labs" class="nav-link" data-route="labs">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.62 19.38A2 2 0 0 0 6.35 22h11.3a2 2 0 0 0 1.73-2.62L14 9.31V2"/><line x1="8.5" y1="2" x2="15.5" y2="2"/></svg>
+          <span>Laboratory Results</span>
+          <span class="nav-badge alert" id="badge-lab-count">0</span>
+        </a>
+
+        <a href="#medications" class="nav-link" data-route="medications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          <span>Prescriptions & Meds</span>
+          <span class="nav-badge" id="badge-rx-count">0</span>
+        </a>
+
+        <div class="nav-section-label">Financial & Claims</div>
+
+        <a href="#billing" class="nav-link" data-route="billing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span>Billing & Insurance</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer / Clinician Badge -->
+      <div class="sidebar-footer">
+        <div class="clinician-card">
+          <div class="clinician-avatar" id="sidebar-clinician-avatar">SL</div>
+          <div class="clinician-info">
+            <div class="clinician-name" id="sidebar-clinician-name">Dr. Sarah Lin, MD</div>
+            <div class="clinician-role" id="sidebar-clinician-role">Internal Medicine</div>
+          </div>
+          <button id="btn-clinician-signout" class="btn-signout" title="Switch Account / Sign Out">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Work Area -->
+    <main class="app-main" id="app-main">
+      
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="btn-mobile-menu" aria-label="Toggle navigation menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+
+          <!-- Smart Search -->
+          <div class="global-search-wrapper" id="global-search-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search patients by name, MRN, diagnosis, phone..." autocomplete="off">
+            <div class="search-dropdown" id="global-search-dropdown"></div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Notification Bell -->
+          <div class="notif-wrapper">
+            <button class="btn-icon" id="btn-header-notifs" aria-label="View alerts and notifications">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <div class="notif-badge-indicator"></div>
+            </button>
+
+            <!-- Notifications Popover -->
+            <div class="notif-popover" id="header-notif-popover">
+              <div class="notif-header">
+                <span>Clinical Alerts & Updates</span>
+                <span style="font-size: 11px; color: var(--text-muted);">Real-time</span>
+              </div>
+              <div class="notif-list" id="notif-items-list"></div>
+            </div>
+          </div>
+
+          <!-- Quick Action "+ New Patient" -->
+          <button class="btn-quick-action" onclick="window.careFlowApp.openModal('modal-new-patient')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            <span>New Patient</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic View Container -->
+      <div class="view-container" id="view-content-root"></div>
+
+    </main>
+  </div>
+
+  <!-- Accessible Modals -->
+
+  <!-- 1. Modal: New Patient Intake -->
+  <div class="modal-overlay" id="modal-new-patient">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          Register New Patient Chart
+        </div>
+        <button class="btn-close-modal" aria-label="Close dialog">✕</button>
+      </div>
+      <form id="form-new-patient">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name <span class="required">*</span></label>
+              <input type="text" name="firstName" class="form-control" required placeholder="e.g. Jane">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <span class="required">*</span></label>
+              <input type="text" name="lastName" class="form-control" required placeholder="e.g. Doe">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date of Birth <span class="required">*</span></label>
+              <input type="date" name="dob" class="form-control" required value="1988-06-15">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Biological Sex <span class="required">*</span></label>
+              <select name="gender" class="form-control">
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Blood Type</label>
+              <select name="bloodType" class="form-control">
+                <option value="O+">O+</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="AB+">AB+</option>
+                <option value="O-">O-</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone Number <span class="required">*</span></label>
+              <input type="tel" name="phone" class="form-control" required placeholder="(555) 000-0000" value="(555) 432-8765">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" name="email" class="form-control" placeholder="jane.doe@example.com" value="jane.doe@example.com">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Primary Residential Address</label>
+            <input type="text" name="address" class="form-control" placeholder="Street, City, State, ZIP" value="100 Medical Center Way, Portland, OR">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Primary Diagnosis / Intake Condition</label>
+              <input type="text" name="initialCondition" class="form-control" placeholder="e.g. Essential Hypertension" value="Essential Hypertension">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ICD-10 Code</label>
+              <input type="text" name="initialIcd" class="form-control" placeholder="e.g. I10" value="I10">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Health Insurance Payer</label>
+              <input type="text" name="insuranceProvider" class="form-control" value="BlueShield Comprehensive">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Policy Number</label>
+              <input type="text" name="policyNumber" class="form-control" value="BSC-902184">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Patient Chart</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Modal: Book Appointment -->
+  <div class="modal-overlay" id="modal-new-apt">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Schedule Clinical Appointment
+        </div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-new-apt">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient <span class="required">*</span></label>
+            <select name="patientId" class="form-control modal-patient-select" required></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date <span class="required">*</span></label>
+              <input type="date" name="date" class="form-control" required value="2026-09-11">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time <span class="required">*</span></label>
+              <input type="text" name="time" class="form-control" required value="10:00 AM">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Encounter Type</label>
+              <select name="type" class="form-control">
+                <option value="In-Person">In-Person Office Visit</option>
+                <option value="Telehealth">Telehealth Video Consult</option>
+                <option value="Inpatient Bedside">Inpatient Bedside</option>
+                <option value="Urgent Care">Urgent Care Evaluation</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duration (minutes)</label>
+              <select name="durationMinutes" class="form-control">
+                <option value="15">15 min</option>
+                <option value="30" selected>30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">60 min</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reason for Visit / Chief Concern <span class="required">*</span></label>
+            <input type="text" name="reason" class="form-control" required placeholder="e.g. Semi-annual Diabetes & Blood Pressure Review" value="Routine Clinical Evaluation">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Exam Room / Location</label>
+            <input type="text" name="room" class="form-control" value="Exam Room 3A">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Modal: Log Vitals -->
+  <div class="modal-overlay" id="modal-log-vitals">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Record Patient Vital Signs
+        </div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-log-vitals">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient</label>
+            <select name="patientId" class="form-control modal-patient-select"></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Systolic BP (mmHg) <span class="required">*</span></label>
+              <input type="number" name="bpSystolic" class="form-control" required value="122" min="60" max="240">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Diastolic BP (mmHg) <span class="required">*</span></label>
+              <input type="number" name="bpDiastolic" class="form-control" required value="78" min="40" max="140">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Heart Rate (bpm) <span class="required">*</span></label>
+              <input type="number" name="heartRate" class="form-control" required value="72" min="30" max="220">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Oxygen Sat (SpO2 %) <span class="required">*</span></label>
+              <input type="number" name="spO2" class="form-control" required value="98" min="70" max="100">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Temperature (°F)</label>
+              <input type="number" step="0.1" name="temp" class="form-control" value="98.6">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Respiration Rate (/min)</label>
+              <input type="number" name="respRate" class="form-control" value="16">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Weight (lbs)</label>
+              <input type="number" step="0.1" name="weight" class="form-control" value="155">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Height (inches)</label>
+              <input type="number" step="0.5" name="height" class="form-control" value="64">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Vital Signs</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Modal: Add Allergy -->
+  <div class="modal-overlay" id="modal-add-allergy">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>
+          Document Patient Allergy
+        </div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-add-allergy">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient</label>
+            <select name="patientId" class="form-control modal-patient-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Allergen Name <span class="required">*</span></label>
+            <input type="text" name="allergen" class="form-control" required placeholder="e.g. Amoxicillin, Codeine, Peanuts, Latex">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select name="type" class="form-control">
+                <option value="Drug">Drug / Pharmaceutical</option>
+                <option value="Food">Food / Nutritional</option>
+                <option value="Environmental">Environmental</option>
+                <option value="Biological">Biological / Contrast</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Severity Rating <span class="required">*</span></label>
+              <select name="severity" class="form-control">
+                <option value="Mild">Mild (Erythema, slight pruritus)</option>
+                <option value="Moderate" selected>Moderate (Diffuse rash, wheezing, nausea)</option>
+                <option value="Severe">Severe (Anaphylaxis, angioedema, shock)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Specific Clinical Reaction / Symptoms <span class="required">*</span></label>
+            <textarea name="reaction" class="form-control" required placeholder="Describe symptoms experienced (e.g. Facial swelling, dyspnea, hives)"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-danger">Save Allergy to Chart</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Modal: Add Condition -->
+  <div class="modal-overlay" id="modal-add-condition">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">Document Chronic / Active Condition</div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-add-condition">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient</label>
+            <select name="patientId" class="form-control modal-patient-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Condition Description <span class="required">*</span></label>
+            <input type="text" name="condition" class="form-control" required placeholder="e.g. Gastroesophageal reflux disease without esophagitis">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">ICD-10 Code <span class="required">*</span></label>
+              <input type="text" name="icd10" class="form-control" required placeholder="e.g. K21.9">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date Diagnosed</label>
+              <input type="date" name="diagnosedDate" class="form-control" value="2026-09-10">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Clinical Notes</label>
+            <textarea name="notes" class="form-control" placeholder="Add clinical management context or goals..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Condition to Problem List</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Modal: E-Prescribe Medication -->
+  <div class="modal-overlay" id="modal-new-prescription">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          E-Prescribe Medication & Electronic Routing
+        </div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-new-prescription">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient <span class="required">*</span></label>
+            <select name="patientId" class="form-control modal-patient-select" required></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Medication Name (Generic / Brand) <span class="required">*</span></label>
+              <input type="text" name="name" class="form-control" required placeholder="e.g. Lisinopril, Metformin, Amoxicillin" value="Spironolactone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dosage & Strength <span class="required">*</span></label>
+              <input type="text" name="dosage" class="form-control" required placeholder="e.g. 25 mg" value="25 mg">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Route</label>
+              <select name="route" class="form-control">
+                <option value="Oral">Oral (PO)</option>
+                <option value="Inhalation">Inhalation</option>
+                <option value="Subcutaneous">Subcutaneous (SC)</option>
+                <option value="Topical">Topical</option>
+                <option value="Intravenous">Intravenous (IV)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Frequency / Sig <span class="required">*</span></label>
+              <input type="text" name="frequency" class="form-control" required placeholder="e.g. Once daily in morning with water" value="Once daily in the morning">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Clinical Indication</label>
+              <input type="text" name="indication" class="form-control" placeholder="e.g. Resistant Hypertension" value="Hypertension management">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Refills Authorized</label>
+              <select name="refillsRemaining" class="form-control">
+                <option value="0">0 (No refills)</option>
+                <option value="1">1 Refill</option>
+                <option value="2">2 Refills</option>
+                <option value="3" selected>3 Refills</option>
+                <option value="5">5 Refills</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Destination Pharmacy</label>
+            <input type="text" name="pharmacy" class="form-control" value="CareFlow Outpatient Pharmacy (St. Jude Medical)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Authorize & Transmit Prescription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Modal: Order Lab -->
+  <div class="modal-overlay" id="modal-order-lab">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">Order Diagnostic Laboratory Panel</div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-order-lab">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient <span class="required">*</span></label>
+            <select name="patientId" class="form-control modal-patient-select" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Diagnostic Panel <span class="required">*</span></label>
+            <select name="panelName" class="form-control">
+              <option value="Comprehensive Metabolic Panel (CMP)">Comprehensive Metabolic Panel (CMP)</option>
+              <option value="Complete Blood Count (CBC) with Differential">Complete Blood Count (CBC) with Diff</option>
+              <option value="Lipid Panel with Non-HDL">Lipid Panel with Non-HDL</option>
+              <option value="Hemoglobin A1c Glycated">Hemoglobin A1c Glycated</option>
+              <option value="Renal Function Panel">Renal Function Panel</option>
+              <option value="Thyroid Stimulating Hormone (TSH) with Reflex">TSH with Reflex Free T4</option>
+              <option value="Urinalysis Complete with Microscopic Exam">Urinalysis with Microscopy</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority Order</label>
+            <select name="priority" class="form-control">
+              <option value="Routine">Routine (Outpatient Core Lab)</option>
+              <option value="Stat">Stat (Turnaround &lt; 60 minutes)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Diagnostic Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. Modal: Superbill / Claim -->
+  <div class="modal-overlay" id="modal-new-claim">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">Generate Billing Superbill</div>
+        <button class="btn-close-modal">✕</button>
+      </div>
+      <form id="form-new-claim">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Patient <span class="required">*</span></label>
+            <select name="patientId" class="form-control modal-patient-select" required></select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">CPT Procedure Code</label>
+              <input type="text" name="cptCode" class="form-control" value="99214">
+            </div>
+            <div class="form-group">
+              <label class="form-label">CPT Description</label>
+              <input type="text" name="cptDescription" class="form-control" value="Office visit established patient, level 4">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">ICD-10 Diagnosis</label>
+              <input type="text" name="icdCode" class="form-control" value="I10">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Charge Amount ($)</label>
+              <input type="number" step="0.01" name="chargeAmount" class="form-control" value="195.00">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate Superbill</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Area -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Main Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
